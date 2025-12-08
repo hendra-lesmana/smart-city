@@ -51,7 +51,10 @@ export default function ReportMarkers({ reports, onReportClick }: ReportMarkersP
                 }
             });
 
-            const marker = new maplibregl.Marker({ element: el })
+            const marker = new maplibregl.Marker({
+                element: el,
+                anchor: 'center'
+            })
                 .setLngLat([report.coordinates.lng, report.coordinates.lat])
                 .setPopup(
                     new maplibregl.Popup({ offset: 25 }).setHTML(`

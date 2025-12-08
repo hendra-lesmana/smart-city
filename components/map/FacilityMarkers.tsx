@@ -58,7 +58,10 @@ export default function FacilityMarkers({ facilities, onFacilityClick }: Facilit
                 }
             });
 
-            const marker = new maplibregl.Marker({ element: el })
+            const marker = new maplibregl.Marker({
+                element: el,
+                anchor: 'center'
+            })
                 .setLngLat([facility.coordinates.lng, facility.coordinates.lat])
                 .setPopup(
                     new maplibregl.Popup({ offset: 25 }).setHTML(`

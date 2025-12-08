@@ -29,37 +29,41 @@ export default function SensorMarkers({ sensors, onSensorClick }: SensorMarkersP
             const el = document.createElement("div");
             el.className = "sensor-marker";
             el.style.cssText = `
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 3px solid white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        cursor: pointer;
-        background-color: ${color};
-        ${sensor.status === 'danger' ? 'animation: pulse 1s infinite;' : ''}
-      `;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 3px solid white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                cursor: pointer;
+                background-color: ${color};
+                ${sensor.status === 'danger' ? 'animation: pulse 1s infinite;' : ''}
+            `;
 
-            el.addEventListener("click", () => {
+            el.addEventListener("click", (e) => {
+                e.stopPropagation();
                 if (onSensorClick) {
                     onSensorClick(sensor);
                 }
             });
 
-            const marker = new maplibregl.Marker({ element: el })
+            const marker = new maplibregl.Marker({
+                element: el,
+                anchor: 'center'  // This ensures the marker is centered on the coordinates
+            })
                 .setLngLat([sensor.coordinates.lng, sensor.coordinates.lat])
                 .setPopup(
                     new maplibregl.Popup({ offset: 25 }).setHTML(`
-            <div style="padding: 8px;">
-              <h3 style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${sensor.name}</h3>
-              <p style="font-size: 12px; color: #666;">${sensor.type}</p>
-              <p style="font-size: 14px; font-weight: 600; margin-top: 8px;">
-                ${sensor.currentReading.value} ${sensor.currentReading.unit}
-              </p>
-              <p style="font-size: 12px; color: ${color}; margin-top: 4px; text-transform: capitalize;">
-                Status: ${sensor.status}
-              </p>
-            </div>
-          `)
+                        <div style="padding: 8px;">
+                            <h3 style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${sensor.name}</h3>
+                            <p style="font-size: 12px; color: #666;">${sensor.type.replace('_', ' ')}</p>
+                            <p style="font-size: 14px; font-weight: 600; margin-top: 8px;">
+                                ${sensor.currentReading.value} ${sensor.currentReading.unit}
+                            </p>
+                            <p style="font-size: 12px; color: ${color}; margin-top: 4px; text-transform: capitalize;">
+                                Status: ${sensor.status}
+                            </p>
+                        </div>
+                    `)
                 )
                 .addTo(map);
 
@@ -74,3 +78,4 @@ export default function SensorMarkers({ sensors, onSensorClick }: SensorMarkersP
 
     return null;
 }
+

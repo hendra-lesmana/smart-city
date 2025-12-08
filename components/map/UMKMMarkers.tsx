@@ -55,7 +55,10 @@ export default function UMKMMarkers({ businesses, onBusinessClick }: UMKMMarkers
                 }
             });
 
-            const marker = new maplibregl.Marker({ element: el })
+            const marker = new maplibregl.Marker({
+                element: el,
+                anchor: 'center'
+            })
                 .setLngLat([business.coordinates.lng, business.coordinates.lat])
                 .setPopup(
                     new maplibregl.Popup({ offset: 25 }).setHTML(`
