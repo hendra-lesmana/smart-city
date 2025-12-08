@@ -86,7 +86,7 @@ export default function SensorMarkers({ sensors, onSensorClick }: SensorMarkersP
             const popup = new maplibregl.Popup({
                 offset: 20,
                 closeButton: true,
-                closeOnClick: false,
+                closeOnClick: true,
                 maxWidth: '280px'
             }).setHTML(`
                 <div style="padding: 12px; font-family: system-ui, -apple-system, sans-serif;">
