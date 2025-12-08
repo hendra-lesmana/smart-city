@@ -143,16 +143,22 @@ export default function SensorMarkers({ sensors, onSensorClick }: SensorMarkersP
                 .setPopup(popup)
                 .addTo(map);
 
-            // Handle click - toggle popup and call callback
+            // Handle click - use marker's togglePopup method
             el.addEventListener("click", (e) => {
                 e.stopPropagation();
 
-                // Toggle popup
-                if (popup.isOpen()) {
-                    popup.remove();
-                } else {
-                    popup.addTo(map);
-                }
+                // Close all other popups first
+                markersRef.current.forEach(m => {
+                    if (m !== marker) {
+                        const p = m.getPopup();
+                        if (p && p.isOpen()) {
+                            m.togglePopup();
+                        }
+                    }
+                });
+
+                // Toggle this marker's popup using the built-in method
+                marker.togglePopup();
 
                 // Call the callback for fly-to animation
                 if (onSensorClick) {
