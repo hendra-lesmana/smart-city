@@ -1,20 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Filter } from "lucide-react";
+import { AlertTriangle, Filter, X } from "lucide-react";
 import MainLayout from "@/components/layout/MainLayout";
 import MapContainer from "@/components/map/MapContainer";
 import MapFlyToHandler from "@/components/map/MapFlyToHandler";
 import SensorCard from "@/components/sensors/SensorCard";
 import SensorMarkers from "@/components/sensors/SensorMarkers";
-import { useSensors, useCriticalAlerts } from "@/store/hooks";
+import { useSensors } from "@/store/hooks";
 import { Sensor } from "@/types";
 
 export default function EarlyWarningPage() {
     const [sensors] = useSensors();
-    const criticalAlerts = useCriticalAlerts();
     const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
     const [statusFilter, setStatusFilter] = useState<string>("all");
+    const [isBannerVisible, setIsBannerVisible] = useState(true);
 
     const filteredSensors = sensors.filter(sensor => {
         if (statusFilter === "all") return true;
@@ -27,6 +27,10 @@ export default function EarlyWarningPage() {
 
     const handleSensorClick = (sensor: Sensor) => {
         setSelectedSensor(sensor);
+    };
+
+    const handleCloseBanner = () => {
+        setIsBannerVisible(false);
     };
 
     return (
@@ -49,12 +53,19 @@ export default function EarlyWarningPage() {
                     </MapContainer>
 
                     {/* Alert Banner */}
-                    {criticalAlerts.length > 0 && (
+                    {dangerSensors.length > 0 && isBannerVisible && (
                         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-danger text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 z-10 animate-fadeIn">
                             <AlertTriangle className="w-5 h-5" />
                             <span className="font-semibold">
-                                {criticalAlerts.length} Critical Alert{criticalAlerts.length > 1 ? "s" : ""}
+                                {dangerSensors.length} Danger Sensor{dangerSensors.length > 1 ? "s" : ""} Detected
                             </span>
+                            <button
+                                onClick={handleCloseBanner}
+                                className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors"
+                                title="Close alert"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
                         </div>
                     )}
                 </div>
