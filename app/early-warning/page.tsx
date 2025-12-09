@@ -7,12 +7,14 @@ import MapContainer from "@/components/map/MapContainer";
 import MapFlyToHandler from "@/components/map/MapFlyToHandler";
 import SensorCard from "@/components/sensors/SensorCard";
 import SensorMarkers from "@/components/sensors/SensorMarkers";
+import SensorDetailModal from "@/components/sensors/SensorDetailModal";
 import { useSensors } from "@/store/hooks";
 import { Sensor } from "@/types";
 
 export default function EarlyWarningPage() {
     const [sensors] = useSensors();
     const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
+    const [modalSensor, setModalSensor] = useState<Sensor | null>(null);
     const [statusFilter, setStatusFilter] = useState<string>("all");
     const [isBannerVisible, setIsBannerVisible] = useState(true);
 
@@ -31,6 +33,14 @@ export default function EarlyWarningPage() {
 
     const handleCloseBanner = () => {
         setIsBannerVisible(false);
+    };
+
+    const handleOpenModal = (sensor: Sensor) => {
+        setModalSensor(sensor);
+    };
+
+    const handleCloseModal = () => {
+        setModalSensor(null);
     };
 
     return (
@@ -121,13 +131,22 @@ export default function EarlyWarningPage() {
                                     key={sensor.id}
                                     sensor={sensor}
                                     onClick={() => handleSensorClick(sensor)}
+                                    onViewDetails={() => handleOpenModal(sensor)}
                                 />
                             ))
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* Sensor Detail Modal */}
+            {modalSensor && (
+                <SensorDetailModal
+                    sensor={modalSensor}
+                    isOpen={!!modalSensor}
+                    onClose={handleCloseModal}
+                />
+            )}
         </MainLayout>
     );
 }
-

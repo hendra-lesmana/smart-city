@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Droplets, CloudRain, Activity, Thermometer, Wind } from "lucide-react";
+import { AlertTriangle, Droplets, CloudRain, Activity, Thermometer, Wind, Eye } from "lucide-react";
 import { Sensor } from "@/types";
 import { getSensorColor, formatDateTime, formatRelativeTime } from "@/lib/utils";
 import { cn } from "@/lib/cn";
@@ -8,9 +8,10 @@ import { cn } from "@/lib/cn";
 interface SensorCardProps {
     sensor: Sensor;
     onClick?: () => void;
+    onViewDetails?: () => void;
 }
 
-export default function SensorCard({ sensor, onClick }: SensorCardProps) {
+export default function SensorCard({ sensor, onClick, onViewDetails }: SensorCardProps) {
     const statusColor = getSensorColor(sensor.status);
 
     const getIcon = () => {
@@ -41,6 +42,11 @@ export default function SensorCard({ sensor, onClick }: SensorCardProps) {
             default:
                 return "Unknown";
         }
+    };
+
+    const handleViewDetails = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onViewDetails?.();
     };
 
     return (
@@ -109,7 +115,19 @@ export default function SensorCard({ sensor, onClick }: SensorCardProps) {
                         </span>
                     </div>
                 )}
+
+                {/* View Details Button */}
+                {onViewDetails && (
+                    <button
+                        onClick={handleViewDetails}
+                        className="w-full mt-2 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-colors"
+                    >
+                        <Eye className="w-3.5 h-3.5" />
+                        View Details & History
+                    </button>
+                )}
             </div>
         </div>
     );
 }
+
